@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fin-Lab: Tu Ruta Financiera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{--bg:#fff4d6;--sf:#fff;--tx:#2b2250;--mu:#6f6a8f;--bd:#f0d9a0;--gr:#22c55e;--bl:#3b82f6;--rd:#ef4444;--yl:#f59e0b;--pu:#8b5cf6;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1736;--sf:#2a2352;--tx:#fff;--mu:#c3bde6;--bd:#453d86;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1c1736;--sf:#2a2352;--tx:#fff;--mu:#c3bde6;--bd:#453d86}
+html{scroll-padding-top:env(safe-area-inset-top,0px);font-size:clamp(15px,1vw + 11px,19px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:'Baloo 2',ui-rounded,system-ui,sans-serif;min-height:100vh}
+.card{position:relative;background:var(--sf);border:3px solid var(--bd);border-radius:24px;padding:16px}
+.mu{color:var(--mu)}.sm{font-size:.82rem}.num{font-variant-numeric:tabular-nums}
+.bar{height:12px;border-radius:99px;background:color-mix(in srgb,var(--mu) 25%,transparent);overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:99px;transition:width .6s,background .3s}
+.btn{background:var(--gr);color:#fff;font:800 1.15rem 'Baloo 2',sans-serif;border:0;border-radius:20px;padding:12px 26px;cursor:pointer;box-shadow:0 5px 0 color-mix(in srgb,var(--gr) 60%,#000);transition:transform .1s,box-shadow .1s}
+.btn:active:not(:disabled){transform:translateY(4px);box-shadow:0 1px 0 color-mix(in srgb,var(--gr) 60%,#000)}
+.btn.bl{background:var(--bl);box-shadow:0 5px 0 color-mix(in srgb,var(--bl) 60%,#000)}.btn.pu{background:var(--pu);box-shadow:0 5px 0 color-mix(in srgb,var(--pu) 60%,#000)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.opt{display:block;width:100%;text-align:left;background:var(--sf);color:var(--tx);border:3px solid var(--bd);border-radius:20px;padding:14px;margin-top:10px;cursor:pointer;font-family:inherit;transition:transform .12s,border-color .2s}
+.opt:hover:not(:disabled){border-color:var(--pu);transform:scale(1.02)}.opt:active:not(:disabled){transform:scale(.97)}
+.opt:disabled{opacity:.45;cursor:not-allowed}.opt b{display:block;font-size:1.1rem}.opt span{font-size:.85rem;color:var(--mu)}
+.rb{width:48px;height:48px;border-radius:50%;border:3px solid var(--bd);background:var(--sf);font-size:1.3rem;cursor:pointer;transition:transform .1s}.rb:active:not(:disabled){transform:scale(.85)}.rb:disabled{opacity:.3}
+.jar{background:var(--sf);border:4px solid;border-radius:24px;padding:12px;text-align:center}
+.coins{min-height:2.6rem;font-size:1.1rem;line-height:1.2;word-break:break-all}
+.mascot{display:flex;gap:12px;align-items:flex-end;margin-bottom:14px}
+.pig{font-size:4.2rem;line-height:1;animation:bob 2s ease-in-out infinite}.pig.sad{animation:shake .5s 2}
+.bubble{background:var(--sf);border:3px solid var(--pu);border-radius:20px 20px 20px 4px;padding:10px 14px;flex:1;font-weight:600}
+.chip{display:inline-block;background:color-mix(in srgb,var(--pu) 15%,var(--sf));border:2px solid var(--pu);border-radius:99px;padding:4px 12px;margin:4px 4px 0 0;font-weight:700;font-size:.9rem}
+.view{animation:pop .4s cubic-bezier(.3,1.4,.5,1)}
+.dl{position:absolute;top:8px;right:12px;font-weight:800;animation:fl 2.4s forwards}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--bd);display:inline-block;margin:0 4px}.dot.on{background:var(--pu);transform:scale(1.3)}
+.node{aspect-ratio:1;width:100%;max-width:52px;margin:auto;overflow:hidden;line-height:1;text-align:center;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:clamp(.5rem,2.4vw,.9rem);background:var(--sf);border:3px solid var(--bd)}
+.node.cur{border-color:var(--pu);background:var(--pu);color:#fff;animation:pulse 1.2s infinite}.node.done{border-color:var(--yl);background:#fff6d6;color:#2b2250}
+.fcard{background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff;border-radius:22px;padding:18px;box-shadow:0 8px 20px rgba(99,102,241,.35)}
+.badge{opacity:.35;filter:grayscale(1)}.badge.on{opacity:1;filter:none;border-color:var(--yl)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px;z-index:60}
+.cf{position:fixed;top:-30px;z-index:70;pointer-events:none;animation:fall 3s linear forwards}
+.alert{background:color-mix(in srgb,var(--rd) 18%,var(--sf));border:3px solid var(--rd);color:var(--rd);border-radius:16px;padding:8px 12px;font-weight:700;margin-bottom:10px}
+input.nm{width:100%;font:700 1.3rem 'Baloo 2',sans-serif;padding:10px 14px;border-radius:16px;border:3px solid var(--bd);background:var(--sf);color:var(--tx)}
+*{box-sizing:border-box}
+.mx-auto{margin-left:auto;margin-right:auto}.max-w-3xl{max-width:1100px}.p-3{padding:12px}.rounded-2xl{border-radius:16px}.w-full{width:100%}
+.flex{display:flex}.grid{display:grid}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-between{justify-content:space-between}.justify-center{justify-content:center}.text-center{text-align:center}.text-left{text-align:left}
+.gap-1{gap:4px}.gap-2{gap:8px}.gap-3{gap:12px}.grid-cols-2{grid-template-columns:repeat(2,1fr)}.grid-cols-3{grid-template-columns:repeat(3,1fr)}.grid-cols-12{grid-template-columns:repeat(12,1fr)}
+.mt-1{margin-top:4px}.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}.mt-5{margin-top:20px}.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}
+.text-xl{font-size:1.25rem}.text-2xl{font-size:1.5rem}.text-3xl{font-size:1.9rem}.text-4xl{font-size:2.4rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}
+.\!p-3{padding:12px!important}.\!py-1{padding-top:4px!important;padding-bottom:4px!important}.\!px-3{padding-left:12px!important;padding-right:12px!important}.\!py-8{padding-top:32px!important;padding-bottom:32px!important}.\!w-16{width:64px!important}.\!h-16{height:64px!important}.\!text-base{font-size:1rem!important}.\!text-xl{font-size:1.25rem!important}.\!text-2xl{font-size:1.5rem!important}.\!text-3xl{font-size:1.9rem!important}
+@media (min-width:640px){.sm\:p-5{padding:20px}.sm\:grid-cols-3{grid-template-columns:repeat(3,1fr)}.sm\:grid-cols-4{grid-template-columns:repeat(4,1fr)}}
+@keyframes bob{50%{transform:translateY(-8px)}}@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes pop{from{opacity:0;transform:scale(.92) translateY(12px)}to{opacity:1;transform:none}}
+@keyframes fl{0%{opacity:0;transform:translateY(6px)}15%{opacity:1;transform:none}70%{opacity:1}100%{opacity:0;transform:translateY(-12px)}}
+@keyframes pulse{50%{transform:scale(1.12)}}@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="max-w-3xl mx-auto p-3 sm:p-5">
+  <div id="hud"></div>
+  <main id="main"></main>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const fmt=n=>(n<0?'-':'')+'$'+Math.abs(Math.round(n)).toLocaleString('en-US');
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const INCOME=1200,BASE=600;
+const AV=['🧒','👧','🧑‍🎓','👩‍🎓','🦸','🧑‍🚀'];
+const EVENTS=[
+ {k:'phone',i:'📱',t:'¡Se rompió tu teléfono de trabajo!',d:'Lo necesitas para ganar dinero. ¿Qué haces?',o:[
+  {l:'Repararlo con dinero de tu cartera',s:'Pagas $50 ahora',e:{cash:-50}},
+  {l:'Comprar uno nuevo en 12 cuotas',s:'Pagas $45 al mes durante un año',e:{loan:{n:12,amt:540},asset:350,stress:3}},
+  {l:'No repararlo',s:'Estás muy estresado y ganarás $150 menos el próximo mes',e:{stress:20,pen:150}}]},
+ {k:'trip',i:'🏖️',t:'¡Tus amigos organizan un viaje!',d:'Cuesta $200 y todos van a ir.',o:[
+  {l:'Ir pagando con tarjeta',s:'Debes $200 en la tarjeta',e:{card:200,stress:-5}},
+  {l:'Ir con tu hucha de emergencias',s:'Gastas $200 de tus ahorros',e:{fund:200,stress:-5}},
+  {l:'Decir que no',s:'Te sientes excluido (+10% estrés) pero cuidas tu dinero',e:{stress:10}}]},
+ {k:'med',i:'🦷',t:'¡Te duele una muela!',d:'El dentista cobra $180.',o:[
+  {l:'Pagar con tu cartera',s:'Pagas $180 ahora',e:{cash:-180}},
+  {l:'Pagar con la tarjeta',s:'Debes $180 en la tarjeta',e:{card:180}},
+  {l:'Aguantar el dolor',s:'Mucho estrés y ganas $100 menos el próximo mes',e:{stress:15,pen:100}}]},
+ {k:'gig',i:'💼',t:'¡Te ofrecen un trabajo extra!',d:'Pagan $250 pero te cansa.',o:[
+  {l:'Aceptar y usar el dinero',s:'+$250 en tu cartera, +12% estrés',e:{cash:250,stress:12}},
+  {l:'Aceptar y guardarlo en la hucha',s:'+$250 de ahorros, +12% estrés',e:{sav:250,stress:12}},
+  {l:'Descansar',s:'Todo sigue igual',e:{}}]},
+ {k:'sale',i:'🛍️',t:'¡Oferta relámpago!',d:'Unos audífonos geniales cuestan $150 hoy.',o:[
+  {l:'Comprar con la tarjeta',s:'Debes $150 en la tarjeta',e:{card:150,stress:-5,asset:60}},
+  {l:'Comprar con tu cartera',s:'Pagas $150 ahora',e:{cash:-150,stress:-5,asset:60}},
+  {l:'Resistir la tentación',s:'¡Te sientes fuerte! -3% estrés',e:{stress:-3}}]},
+ {k:'friend',i:'🤝',t:'Un amigo te pide dinero prestado',d:'Dice que te lo devuelve “pronto”.',o:[
+  {l:'Prestarle $100',s:'Pagas $100 y te preocupas un poco',e:{cash:-100,stress:5}},
+  {l:'Prestarle solo $40',s:'Pagas $40',e:{cash:-40,stress:2}},
+  {l:'Decir que no',s:'Es incómodo (+8% estrés)',e:{stress:8}}]}];
+EVENTS.push(
+{k:'bike',i:'🚲',t:'¡Se pinchó la llanta de tu bicicleta!',d:'La necesitas para ir al trabajo. Arreglarla cuesta $30.',o:[{l:'Pagar con tu cartera',s:'Pagas $30 ahora',e:{cash:-30}},{l:'Pagar con la tarjeta',s:'Debes $30 en la tarjeta',e:{card:30}},{l:'Ir caminando todo el mes',s:'Te cansas mucho (+8% estrés)',e:{stress:8}}]},
+{k:'bday',i:'🎂',t:'¡Es el cumpleaños de tu mejor amigo!',d:'¿Qué le regalas?',o:[{l:'Un regalo bonito de $40',s:'Pagas $40 y te sientes feliz',e:{cash:-40,stress:-4}},{l:'Una tarjeta hecha a mano',s:'Pagas $5 y tu amigo la guarda para siempre',e:{cash:-5,stress:-2}},{l:'No ir a la fiesta',s:'Te sientes mal (+8% estrés)',e:{stress:8}}]},
+{k:'bills',i:'💡',t:'¡Subió la cuenta de la luz!',d:'Este mes llegó $60 más cara.',o:[{l:'Pagarla con tu cartera',s:'Pagas $60 ahora',e:{cash:-60}},{l:'Pagarla con la tarjeta',s:'Debes $60 en la tarjeta',e:{card:60}},{l:'Gastar menos luz y pagar solo $30',s:'Pagas $30 pero pasas frío (+4% estrés)',e:{cash:-30,stress:4}}]},
+{k:'bonus',i:'🎁',t:'¡Te dieron un bono de $150!',d:'Tu jefe quedó contento con tu trabajo.',o:[{l:'Guardarlo todo en la hucha',s:'+$150 de ahorros y -4% estrés',e:{sav:150,stress:-4}},{l:'Guardar la mitad y gastar la mitad',s:'+$75 de ahorros y +$75 en tu cartera',e:{sav:75,cash:75,stress:-6}},{l:'Gastarlo todo en diversión',s:'+$150 en tu cartera y -10% estrés',e:{cash:150,stress:-10}}]},
+{k:'course',i:'🎓',t:'Un curso para ganar más dinero',d:'Cuesta $90 y te enseña algo nuevo.',o:[{l:'Pagarlo con tu cartera',s:'Pagas $90 y ganas conocimientos que valen $90',e:{cash:-90,asset:90,stress:-3}},{l:'Pagarlo con la tarjeta',s:'Debes $90 en la tarjeta',e:{card:90,asset:90,stress:-3}},{l:'Dejarlo para después',s:'No pasa nada',e:{}}]},
+{k:'pet',i:'🐶',t:'¡Tu perrito se enfermó!',d:'El veterinario cobra $120.',o:[{l:'Pagar con tu cartera',s:'Pagas $120 ahora',e:{cash:-120}},{l:'Pagar con la tarjeta',s:'Debes $120 en la tarjeta',e:{card:120}},{l:'No llevarlo al veterinario',s:'Estás muy preocupado (+20% estrés)',e:{stress:20}}]}
+);
+EVENTS.push(
+{k:'rent',i:'🏠',t:'¡Subió el arriendo!',d:'El dueño te cobra $80 más este mes.',o:[{l:'Pagar con tu cartera',s:'Pagas $80 ahora',e:{cash:-80}},{l:'Pagar con la tarjeta',s:'Debes $80 en la tarjeta',e:{card:80}},{l:'Pedirle plazo al dueño',s:'Pierdes 10 puntos de crédito y +10% estrés',e:{score:-10,stress:10}}]},
+{k:'laptop',i:'💻',t:'¡Se dañó tu computador!',d:'Repararlo cuesta $220.',o:[{l:'Pagar con tu cartera',s:'Pagas $220 ahora',e:{cash:-220}},{l:'Pagar con la tarjeta',s:'Debes $220 en la tarjeta',e:{card:220}},{l:'Trabajar sin computador',s:'+15% estrés y ganarás $120 menos el próximo mes',e:{stress:15,pen:120}}]},
+{k:'concert',i:'🎤',t:'¡Concierto de tu artista favorito!',d:'La entrada cuesta $90.',o:[{l:'Comprarla con tu cartera',s:'Pagas $90 y -4% estrés',e:{cash:-90,stress:-4}},{l:'Comprarla con la tarjeta',s:'Debes $90 en la tarjeta',e:{card:90,stress:-4}},{l:'No ir',s:'Te da tristeza (+6% estrés)',e:{stress:6}}]},
+{k:'fine',i:'🚓',t:'¡Te pusieron una multa de tránsito!',d:'Debes pagar $100.',o:[{l:'Pagarla con tu cartera',s:'Pagas $100 ahora',e:{cash:-100}},{l:'Pagarla con la tarjeta',s:'Debes $100 en la tarjeta',e:{card:100}},{l:'Ignorarla',s:'Pierdes 20 puntos de crédito y +8% estrés',e:{score:-20,stress:8}}]},
+{k:'family',i:'🎄',t:'Reunión familiar: toca aportar',d:'Cada uno pone $70 para la cena.',o:[{l:'Aportar con tu cartera',s:'Pagas $70 ahora',e:{cash:-70}},{l:'Aportar con la tarjeta',s:'Debes $70 en la tarjeta',e:{card:70}},{l:'Decir que no puedes',s:'Te sientes mal (+8% estrés)',e:{stress:8}}]},
+{k:'shoes',i:'👟',t:'¡Se rompieron tus zapatos!',d:'Unos nuevos cuestan $60.',o:[{l:'Comprarlos con tu cartera',s:'Pagas $60 ahora',e:{cash:-60}},{l:'Comprarlos con la tarjeta',s:'Debes $60 en la tarjeta',e:{card:60}},{l:'Seguir con los rotos',s:'Incomodidad (+6% estrés)',e:{stress:6}}]},
+{k:'wifi',i:'📶',t:'¡Se dañó el internet!',d:'El técnico cobra $50.',o:[{l:'Pagar con tu cartera',s:'Pagas $50 ahora',e:{cash:-50}},{l:'Pagar con la tarjeta',s:'Debes $50 en la tarjeta',e:{card:50}},{l:'Quedarte sin internet',s:'+8% estrés y ganarás $80 menos el próximo mes',e:{stress:8,pen:80}}]},
+{k:'glasses',i:'👓',t:'¡Necesitas lentes nuevos!',d:'Cuestan $140.',o:[{l:'Pagar con tu cartera',s:'Pagas $140 ahora',e:{cash:-140}},{l:'Pagar con la tarjeta',s:'Debes $140 en la tarjeta',e:{card:140}},{l:'Esperar un tiempo',s:'+12% estrés y ganarás $80 menos el próximo mes',e:{stress:12,pen:80}}]},
+{k:'fridge',i:'🧊',t:'¡Se dañó la nevera!',d:'Una nueva cuesta $160.',o:[{l:'Comprarla con tu cartera',s:'Pagas $160 ahora',e:{cash:-160}},{l:'Comprarla con la tarjeta',s:'Debes $160 en la tarjeta',e:{card:160}},{l:'Comer afuera todo el mes',s:'Pagas $90 y +5% estrés',e:{cash:-90,stress:5}}]}
+);
+EVENTS.push(
+{k:'bnpl',trap:1,i:'📺',t:'Una tele enorme en oferta',d:'Cuesta $300, pero la tienda dice: “llévala hoy y paga después, ¡sin complicaciones!”',o:[{l:'Comprarla en 6 cuotas de $55',s:'“Sin intereses”, solo 6 cuotitas',e:{loan:{n:6,amt:330},asset:200,stress:-4}},{l:'Pagarla completa con tu cartera',s:'Pagas $300 hoy',e:{cash:-300,asset:200,stress:-4}},{l:'No comprarla',s:'Tu tele actual funciona bien (+3% estrés)',e:{stress:3}}]},
+{k:'store',trap:1,i:'🏷️',t:'¡30% de descuento si abres la tarjeta de la tienda!',d:'Una chaqueta de $200 hoy te sale en $140.',o:[{l:'Abrir la tarjeta y comprarla',s:'Descuento inmediato de $60',e:{card:140,asset:140,stress:-4,score:-10}},{l:'Comprarla en efectivo a precio normal',s:'Pagas $200',e:{cash:-200,asset:140,stress:-4}},{l:'No comprar',s:'Resistes la oferta (+2% estrés)',e:{stress:2}}]},
+{k:'loan',trap:1,i:'💸',t:'“Préstamo rápido sin papeleos”',d:'Te ofrecen $200 hoy mismo, sin preguntas.',o:[{l:'Aceptar el préstamo',s:'Recibes $200 y pagas 6 cuotas de $55',e:{cash:200,loan:{n:6,amt:330},stress:3}},{l:'Pedir ayuda a tu familia',s:'Es incómodo pero sin intereses (+8% estrés)',e:{stress:8}},{l:'No pedir nada',s:'Sigues como estás',e:{}}]},
+{k:'console',trap:1,i:'🎮',t:'¡Salió la consola nueva!',d:'Todos tus amigos la van a comprar. Cuesta $400.',o:[{l:'Comprarla en 10 cuotas de $48',s:'“Casi nada” al mes',e:{loan:{n:10,amt:480},asset:300,stress:-8}},{l:'Pagarla con tu cartera',s:'Pagas $400 hoy',e:{cash:-400,asset:300,stress:-8}},{l:'Esperar y ahorrar',s:'Te aguantas las ganas (+5% estrés)',e:{stress:5}}]},
+{k:'subs',trap:1,i:'📺',t:'¡Prueba gratis de 3 suscripciones!',d:'Streaming, música y videojuegos. “Cancela cuando quieras”.',o:[{l:'Activar las 3 pruebas',s:'Hoy no pagas nada',e:{loan:{n:4,amt:180},stress:-6}},{l:'Activar solo una',s:'Hoy no pagas nada',e:{loan:{n:4,amt:60},stress:-3}},{l:'No activar ninguna',s:'Sin sorpresas',e:{}}]},
+{k:'scam',trap:1,i:'📈',t:'“Duplica tu dinero en un mes”',d:'Un conocido te ofrece una inversión secreta y “segura”.',o:[{l:'Invertir $200 de tu hucha',s:'“Recibirás $400 el mes que viene”',e:{fund:200,stress:6,bad:1}},{l:'Invertir $100 de tu cartera',s:'“Recibirás $200 el mes que viene”',e:{cash:-100,stress:4,bad:1}},{l:'Decir que no',s:'Si suena demasiado bueno, ¡desconfía!',e:{}}]},
+{k:'food',trap:1,i:'🍔',t:'Hoy no tengo ganas de cocinar',d:'La app de comida tiene promociones todos los días.',o:[{l:'Pedir domicilio todo el mes con la tarjeta',s:'“Solo $4 al día”',e:{card:120,stress:-3}},{l:'Pedir domicilio con tu cartera',s:'Pagas $120',e:{cash:-120,stress:-3}},{l:'Cocinar en casa',s:'Gastas $30 en mercado y te cansas (+3% estrés)',e:{cash:-30,stress:3}}]}
+);
+const X=(k,i,t,d,c,a)=>({k,i,t,d,o:[{l:'Pagar con tu cartera',s:`Pagas $${c} ahora`,e:{cash:-c}},{l:'Pagar con la tarjeta',s:`Debes $${c} en la tarjeta`,e:{card:c}},{l:a[0],s:a[1],e:a[2]}]});
+EVENTS.push(
+X('moto','🛵','¡Se averió tu moto!','El mecánico cobra $140.',140,['Usar el bus todo el mes','Gastas $40 y +8% estrés',{cash:-40,stress:8}]),
+X('key','🔑','¡Perdiste tus llaves!','El cerrajero cobra $45.',45,['Dormir en casa de un amigo','Es incómodo (+8% estrés)',{stress:8}]),
+X('roof','🌧️','Hay una gotera en tu cuarto','Arreglarla cuesta $110.',110,['Poner un balde y esperar','+10% estrés',{stress:10}]),
+X('wallet','👛','¡Te robaron la billetera!','Reponer los documentos cuesta $70.',70,['No reponerlos por ahora','Pierdes 10 puntos y +8% estrés',{score:-10,stress:8}]),
+X('wash','🧺','¡Se dañó la lavadora!','Una nueva cuesta $190.',190,['Lavar en la lavandería','Pagas $50 y +5% estrés',{cash:-50,stress:5}]),
+X('exam','📚','Inscripción a un examen','La inscripción cuesta $85.',85,['Pedir prórroga','Pierdes 10 puntos y +8% estrés',{score:-10,stress:8}]),
+X('gas','⛽','¡Subió la gasolina!','Llenar el tanque cuesta $65.',65,['Dejar el vehículo parado','Ganarás $60 menos el próximo mes y +6% estrés',{pen:60,stress:6}]),
+X('wedding','💒','Te invitan a una boda','Entre regalo y ropa gastarás $120.',120,['No ir a la boda','+10% estrés',{stress:10}]),
+X('vaccine','💉','Tu mascota necesita vacunas','Cuestan $75.',75,['No vacunarla','+12% estrés',{stress:12}]),
+X('bus','🚌','¡Subió el pasaje!','Este mes pagarás $55 más.',55,['Caminar al trabajo','+8% estrés',{stress:8}]),
+X('watch','⌚','Se dañó tu reloj de trabajo','Uno nuevo cuesta $80.',80,['Usar el celular','+4% estrés',{stress:4}]),
+X('party','🎉','Tu compañero celebra su ascenso','Toca cooperar con $50.',50,['No cooperar','+6% estrés',{stress:6}]),
+X('coat','🧥','¡Llegó el frío!','Necesitas un abrigo de $90.',90,['Pasar frío','+8% estrés',{stress:8}]),
+X('charger','🔌','Se quemó el cargador','Uno nuevo cuesta $35.',35,['Pedir uno prestado','+4% estrés',{stress:4}]),
+X('taxes','🧾','Llegó el impuesto','Debes pagar $130.',130,['Pagar tarde','Pierdes 20 puntos y +8% estrés',{score:-20,stress:8}]),
+X('hair','💈','Tienes una entrevista importante','Arreglarte cuesta $30.',30,['Ir despeinado','+6% estrés',{stress:6}]),
+X('pipe','🚿','¡Se rompió una tubería!','El plomero cobra $100.',100,['Arreglarla tú mismo','Pagas $30 y +10% estrés',{cash:-30,stress:10}]),
+X('supplies','📐','Tu clase pide materiales','Cuestan $65.',65,['Pedirlos prestados','+5% estrés',{stress:5}]),
+X('printer','🖨️','Se dañó la impresora','Una nueva cuesta $95.',95,['Imprimir en una papelería','Pagas $25 y +4% estrés',{cash:-25,stress:4}]),
+X('help','🫶','Un familiar necesita ayuda urgente','Te pide $100.',100,['No poder ayudar','+10% estrés',{stress:10}]),
+{k:'insure',trap:1,i:'🛡️',t:'“Seguro imperdible para tu celular”',d:'El vendedor dice que es una ganga.',o:[{l:'Contratarlo en 12 cuotas de $15',s:'“Muy barato al mes”',e:{loan:{n:12,amt:180},stress:-2}},{l:'Pagarlo de contado por $120',s:'Pagas $120 hoy',e:{cash:-120,stress:-2}},{l:'No contratarlo',s:'Cuidas tu celular tú mismo',e:{}}]},
+{k:'gym',trap:1,i:'🏋️',t:'Gimnasio con matrícula gratis',d:'“Solo firma aquí y empieza hoy”.',o:[{l:'Firmar por 12 meses de $35',s:'Matrícula gratis',e:{loan:{n:12,amt:420},stress:-3}},{l:'Pagar un solo mes de $35',s:'Pagas $35 hoy',e:{cash:-35,stress:-2}},{l:'Ejercitarte en el parque',s:'Cero costo',e:{}}]},
+{k:'bf',trap:1,i:'🛒',t:'¡Black Friday: todo al 50%!',d:'Hay mil cosas de “ganga” y las ofertas se acaban hoy.',o:[{l:'Comprar gangas con la tarjeta',s:'“¡Casi gratis!”',e:{card:180,asset:60,stress:-6}},{l:'Comprar gangas con tu cartera',s:'Pagas $180',e:{cash:-180,asset:60,stress:-6}},{l:'No ir de compras',s:'Cuesta resistir (+3% estrés)',e:{stress:3}}]},
+{k:'raffle',trap:1,i:'🎟️',t:'Una rifa “que no se puede perder”',d:'El premio es de $2,000.',o:[{l:'Comprar 3 boletas con la tarjeta',s:'“Más boletas, más probabilidad”',e:{card:90,stress:6,bad:1}},{l:'Comprar 1 boleta con tu cartera',s:'Pagas $30',e:{cash:-30,stress:2,bad:1}},{l:'No participar',s:'Cuidas tu dinero',e:{}}]},
+{k:'pack',trap:1,i:'✈️',t:'Paquete de viaje “todo incluido”',d:'Una semana en la playa, ¡te lo mereces!',o:[{l:'Reservar en 8 cuotas de $60',s:'“Paga poquito cada mes”',e:{loan:{n:8,amt:480},stress:-8}},{l:'Pagarlo con tu cartera',s:'Pagas $400 hoy',e:{cash:-400,stress:-8}},{l:'Quedarte en casa',s:'Te da envidia (+5% estrés)',e:{stress:5}}]}
+);
+const GOALS=[['💻','Portátil de trabajo',1000],['✈️','Viaje de vacaciones',2000],['🚀','Capital para emprender',5000]];
+const BADGES=[['zero','🏆','Cero Deudas','Paga todo el saldo de la tarjeta 3 meses seguidos'],['shield','🛡️','Escudo de Emergencia','Ahorra el equivalente a 3 meses de gastos fijos'],['inv','📈','Inversionista Inteligente','Llega a más de 750 puntos de crédito']];
+const TUT=[['🎯','Tu misión','Tienes un sueldo de $1,200 al mes. Durante 12 meses decidirás cómo gastar, ahorrar y usar tu tarjeta. ¡Termina con muchos ahorros y buena reputación!'],
+ ['📊','Tus 4 indicadores','💵 Cartera: dinero que tienes ahora. ⭐ Puntos de crédito (300 a 850): tu reputación. 😰 Estrés: ¡mantenlo bajo! Si llega al 100%, es game over. 🏆 Patrimonio: lo que tienes menos lo que debes.'],
+ ['🔄','Cada mes, 4 pasos','1) Reparte tu sueldo en frascos. 2) Resuelve dos sorpresas. 3) Paga tu tarjeta. 4) Mira tus estrellas y metas.'],
+ ['💳','El secreto de la tarjeta','Pagar todo es lo mejor: sin intereses y sube tus puntos. Pagar solo el mínimo cobra 5% cada mes y la deuda crece como bola de nieve. Cada vez que adquieres una deuda sube tu estrés, y mientras más deudas tengas, más estrés sentirás cada mes. El cupo de la tarjeta es un límite fijo: no se renueva cada mes, solo se libera cuando pagas.'],
+ ['🏅','Metas e insignias','Cumple tres metas (portátil, viaje y emprendimiento) y gana tres insignias: Cero Deudas, Escudo de Emergencia e Inversionista Inteligente.']];
+let G={},AC;
+const loanPay=()=>G.loans.reduce((a,l)=>a+l.pay,0);
+const loanDebt=()=>Math.round(G.loans.reduce((a,l)=>a+l.pay*l.n,0));
+const debt=()=>Math.round(G.card)+loanDebt();
+const net=()=>G.savings+G.cash+G.assets-debt();
+const scoreCol=s=>s<580?'var(--rd)':s<=660?'var(--yl)':'var(--gr)';
+const stressCol=s=>s<30?'var(--gr)':s<=70?'var(--yl)':'var(--rd)';
+function sfx(f=600,d=.12){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;g.gain.value=.07;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d);}catch(e){}}
+function confetti(){for(let i=0;i<36;i++){const s=document.createElement('span');s.className='cf';s.textContent=['🎉','⭐','🪙','✨'][i%4];s.style.left=Math.random()*100+'vw';s.style.animationDelay=Math.random()*.8+'s';s.style.fontSize=(16+Math.random()*18)+'px';document.body.appendChild(s);setTimeout(()=>s.remove(),4000);}}
+function init(){G={scr:'title',tut:0,name:'',av:AV[0],started:0,month:1,cash:300,savings:200,assets:0,score:640,stress:25,card:0,cardPrev:0,cardItems:[],used:[],limit:1000,loans:[],nextPen:0,streak:0,badges:{},hist:[],bud:{},ev:[],evi:0,pick:null,res:null,newB:[],prev:null};render(true);}
+function go(s){G.scr=s;render(true);window.scrollTo(0,0);}
+function startGame(){G.started=1;startMonth();go('map');}
+const fx=o=>{const c=-(o.e.cash||0);if(c>0&&G.cash<c&&G.savings>=c){const e={...o.e,fund:c};delete e.cash;return {...o,l:o.l.replace('cartera','hucha'),s:`Tu cartera no alcanza: pagas $${c} de tu hucha`,e};}return o;};
+const spend=a=>{const t=Math.min(G.cash,a);G.cash-=t;G.savings-=a-t;};
+function draw(l,n){let a=l.filter(e=>!G.used.includes(e.k));if(a.length<n){G.used=G.used.filter(k=>!l.some(e=>e.k===k));a=l.slice();}a.sort(()=>Math.random()-.5);const r=a.slice(0,n);r.forEach(e=>G.used.push(e.k));return r;}
+function startMonth(){
+  G.income=INCOME-G.nextPen;G.nextPen=0;G.fixedMin=Math.ceil((BASE+loanPay())/50)*50;
+  const r=G.income-G.fixedMin,sv=Math.min(100,r);G.bud={fixed:G.fixedMin,save:sv,life:Math.min(100,r-sv)};
+  G.snap={score:G.score,cash:G.cash,stress:G.stress};
+  const pool=EVENTS.filter(e=>!e.trap&&!['phone','trip','gig','bonus'].includes(e.k)),tr=EVENTS.filter(e=>e.trap);
+  G.ev=G.month===1?[EVENTS[0],EVENTS[1],...draw(tr,1),...draw(pool,1)]:[...draw(tr,1),...draw(pool,3)].sort(()=>Math.random()-.5);
+  G.evi=0;G.pick=null;
+}
+function settle(){
+  if(G.cash<0){const u=Math.min(G.savings,-G.cash);G.savings-=u;G.cash+=u;
+    if(G.cash<0){G.cardItems.push({n:'⚠️ Faltante por falta de dinero',a:Math.round(-G.cash)});G.card+=-G.cash;G.cash=0;G.score-=40;G.stress+=20;sfx(180,.3);}}
+  G.score=clamp(G.score,300,850);G.stress=clamp(G.stress,0,100);
+}
+function mascot(msg,mood){return `<div class="mascot"><div class="pig ${mood==='bad'?'sad':''}">${mood==='bad'?'🐷':'🐷'}<span style="font-size:1.6rem">${mood==='bad'?'💧':mood==='good'?'✨':''}</span></div><div class="bubble">${msg}</div></div>`;}
+function hud(){
+  if(!G.started||['title','name','tut'].includes(G.scr)){$('#hud').innerHTML='';return;}
+  const sp=(G.score-300)/550*100,face=G.stress<30?'😄':G.stress<=70?'😐':'😫';
+  $('#hud').innerHTML=`<div class="flex items-center justify-between mb-2"><b>${G.av} ${G.name||'Jugador'}</b><span><b>${G.scr==='final'?'Final':'Mes '+G.month+' de 12'}</b> <button class="btn pu !py-1 !px-3 !text-base" onclick="showHelp()">❓</button></span></div>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+  <div class="card !p-3"><div class="mu sm">💵 Cartera</div><b class="text-xl num" style="color:${G.cash<=0?'var(--rd)':'inherit'}">${fmt(G.cash)}</b><div class="mu sm">Hucha: ${fmt(G.savings)}</div></div>
+  <div class="card !p-3"><div class="mu sm">⭐ Puntos de crédito</div><b class="text-xl num" style="color:${scoreCol(G.score)}">${G.score}</b><div class="bar mt-1"><i style="width:${sp}%;background:${scoreCol(G.score)}"></i></div></div>
+  <div class="card !p-3"><div class="mu sm">${face} Estrés</div><b class="text-xl num" style="color:${stressCol(G.stress)}">${Math.round(G.stress)}%</b><div class="bar mt-1"><i style="width:${G.stress}%;background:${stressCol(G.stress)}"></i></div></div>
+  <div class="card !p-3"><div class="mu sm">🏆 Patrimonio</div><b class="text-xl num" style="color:${net()<0?'var(--rd)':'var(--bl)'}">${fmt(net())}</b><div class="mu sm">Deudas: ${fmt(debt())}</div><div class="mu sm">💳 ${fmt(G.card)} · 📅 ${fmt(loanDebt())}</div></div></div>
+  ${G.stress>=85?`<div class="alert">😰 ¡Cuidado! Tu estrés está en ${Math.round(G.stress)}%. Si llega al 100% se acaba el juego.</div>`:''}${G.cash<=0?'<div class="alert">⚠️ ¡Alerta de mora! Tu cartera está en $0. Lo que gastes ahora será deuda.</div>':''}`;
+  const cur=[G.cash,G.score,G.stress,net()];
+  if(G.prev)[...document.querySelectorAll('#hud .card')].forEach((c,i)=>{const d=Math.round(cur[i]-G.prev[i]);if(d){const good=i===2?d<0:d>0;c.insertAdjacentHTML('beforeend',`<span class="dl" style="color:${good?'var(--gr)':'var(--rd)'}">${d>0?'+':''}${i===0||i===3?fmt(d):d+(i===2?'%':'')}</span>`);}});
+  G.prev=cur;
+}
+function render(anim){if(G.started&&G.stress>=100&&G.scr!=='over'){G.scr='over';sfx(150,.5);}hud();$('#main').innerHTML=`<div class="${anim?'view':''}">${SCR[G.scr]()}</div>`;}
+function helpHtml(){return `<h2 class="text-2xl font-extrabold">¿Cómo se juega?</h2>`+TUT.map(t=>`<p class="mt-3"><b>${t[0]} ${t[1]}.</b> <span class="mu">${t[2]}</span></p>`).join('');}
+function showHelp(){const d=document.createElement('div');d.className='modal';d.onclick=e=>{if(e.target===d)d.remove()};d.innerHTML=`<div class="card" style="max-width:520px;max-height:85vh;overflow:auto">${helpHtml()}<button class="btn mt-4" onclick="this.closest('.modal').remove()">¡Entendido!</button></div>`;document.body.appendChild(d);}
+function chips(e){const c=[];if(e.cash)c.push(`💵 ${e.cash>0?'+':''}${fmt(e.cash)}`);if(e.fund)c.push(`🐷 -${fmt(e.fund)} de la hucha`);if(e.sav)c.push(`🐷 +${fmt(e.sav)} ahorrados`);if(e.card)c.push(`💳 +${fmt(e.card)} de deuda`);if(e.loan)c.push(`📅 ${e.loan.n} cuotas de ${fmt(e.loan.amt/e.loan.n)} = ${fmt(e.loan.amt)} en total`);if(e.asset)c.push(`🎁 Objeto de ${fmt(e.asset)}`);if(e.stress)c.push(`${e.stress>0?'😰':'😊'} Estrés ${e.stress>0?'+':''}${e.stress}%`);if(e.bad)c.push('🎭 Nunca recibiste nada a cambio');if(e.score)c.push(`⭐ ${e.score>0?'+':''}${e.score} puntos`);if(e.pen)c.push(`📉 Ganarás ${fmt(e.pen)} menos`);return (c.length?c:['Sin cambios']).map(x=>`<span class="chip">${x}</span>`).join('');}
+
+const SCR={
+title(){return `<div class="card text-center !py-8"><div class="pig" style="font-size:6rem">🐷</div><h1 class="text-4xl font-extrabold mt-2">Fin-Lab</h1><p class="text-xl mu">Tu ruta financiera</p>
+<p class="mt-3">Soy Fino. ¡Te ayudaré a manejar tu dinero durante 12 meses!</p>
+<button class="btn mt-5 !text-2xl" onclick="sfx(700);go('name')">¡Jugar!</button></div>`;},
+name(){return `${mascot('¡Hola! ¿Cómo te llamas y qué personaje quieres ser?')}<div class="card"><input class="nm" id="nm" maxlength="14" placeholder="Tu nombre" value="${G.name}" oninput="G.name=this.value">
+<div class="flex flex-wrap gap-3 mt-4 justify-center">${AV.map(a=>`<button class="rb !w-16 !h-16 !text-3xl" style="${a===G.av?'border-color:var(--pu);background:color-mix(in srgb,var(--pu) 20%,var(--sf))':''}" onclick="G.av='${a}';sfx(800);render()">${a}</button>`).join('')}</div>
+<div class="text-center mt-5"><button class="btn" onclick="G.name=G.name.trim()||'Jugador';go('tut')">¡Vamos!</button></div></div>`;},
+tut(){const t=TUT[G.tut],last=G.tut===TUT.length-1;return `<div class="card text-center !py-6"><div style="font-size:4.5rem">${t[0]}</div><h2 class="text-2xl font-extrabold">${t[1]}</h2><p class="mt-2 mx-auto" style="max-width:34rem">${t[2]}</p>
+<div class="mt-4">${TUT.map((_,i)=>`<span class="dot ${i===G.tut?'on':''}"></span>`).join('')}</div>
+<div class="flex justify-center gap-3 mt-5">${G.tut?`<button class="btn bl" onclick="G.tut--;render(true)">Atrás</button>`:''}<button class="btn" onclick="${last?'startGame()':'G.tut++;render(true)'}">${last?'¡Empezar mi aventura!':'Siguiente'}</button></div></div>`;},
+map(){const m=G.month;return `${mascot(m===1?`¡Hola, ${G.name}! Este es tu camino de 12 meses. Cada estrella cuenta.`:`¡Muy bien! Vamos con el mes ${m}.`,'good')}<div class="mb-3"><button class="btn !text-2xl w-full" onclick="getPaid()">▶️ ¡Jugar el mes ${m}!</button></div><div class="card"><div class="grid grid-cols-12 gap-1">${Array.from({length:12},(_,i)=>{const n=i+1,d=n<m;return `<div class="node ${n===m?'cur':d?'done':''}">${d?'⭐':n>m?'🔒':n}</div>`}).join('')}</div>
+</div>`;},
+p1(){const b=G.bud,rem=G.income-b.fixed-b.save-b.life;
+ const jar=(k,ic,t,col,h,min)=>`<div class="jar" style="border-color:${col}"><div class="text-3xl">${ic}</div><b>${t}</b><div class="coins">${'🪙'.repeat(b[k]/50)||'—'}</div><b class="text-xl">${fmt(b[k])}</b><div class="flex gap-2 justify-center mt-2"><button class="rb" aria-label="Quitar" onclick="adj('${k}',-50)" ${b[k]<=min?'disabled':''}>➖</button><button class="rb" aria-label="Agregar" onclick="adj('${k}',50)" ${rem<50?'disabled':''}>➕</button></div><div class="mu sm mt-1">${h}</div></div>`;
+ const msg=rem>0?`Tienes ${rem/50} monedas sin repartir. ¡Toca ➕ para ponerlas en un frasco!`:b.save<100?'¿Poco ahorro? Con $100 o más en la hucha te sentirás más tranquilo.':b.life===0?'¡Sin diversión también estresa! Prueba con una moneda.':'¡Buen reparto! Cuando estés listo, confirma.';
+ return `${mascot(msg,rem>0?'':'good')}<div class="card"><div class="alert" style="border-color:var(--gr);color:var(--gr);background:color-mix(in srgb,var(--gr) 15%,var(--sf))">💰 ¡Tu sueldo del mes llegó a tu cartera: ${fmt(G.income)}!</div><h2 class="text-xl font-extrabold">Paso 1: Reparte tu sueldo de ${fmt(G.income)}</h2><p class="mu sm">Tu sueldo llegó solo a la cartera. Cada 🪙 vale $50: lo que pongas en cada frasco sale de ahí (el ahorro pasa a la hucha) y lo que no repartas se queda en tu cartera.</p>
+ <div class="grid sm:grid-cols-3 gap-3 mt-3">${jar('fixed','🏠','Gastos fijos','var(--bl)',`Mínimo ${fmt(G.fixedMin)}: arriendo, comida${G.loans.length?', cuotas':''}`,G.fixedMin)}${jar('save','🐷','Ahorro','var(--gr)','Pasa de la cartera a la hucha. $100 o más baja el estrés',0)}${jar('life','🎮','Diversión','var(--yl)','$150 o más baja el estrés',0)}</div>
+ <div class="text-center mt-4"><div class="bar"><i style="width:${(G.income-rem)/G.income*100}%;background:var(--pu)"></i></div><button class="btn mt-4" onclick="confirmBudget()">¡Listo, confirmar!</button></div></div>`;},
+p2(){const e=G.ev[G.evi],P=G.pick;
+ if(P===null)return `${mascot(`Sorpresa ${G.evi+1} de ${G.ev.length}. ¡Piensa bien antes de elegir!`)}<div class="card"><div class="text-center" style="font-size:4.5rem">${e.i}</div><h2 class="text-xl font-extrabold text-center">${e.t}</h2><p class="mu text-center">${e.d}</p><div class="grid sm:grid-cols-3 gap-3">
+ ${(()=>{const why=o=>o.e.card&&G.card+o.e.card>G.limit?'Tu tarjeta no tiene cupo suficiente (disponible: '+fmt(Math.max(0,G.limit-G.card))+')':o.e.cash<0&&G.cash<-o.e.cash?'No te alcanza el dinero de la cartera':o.e.fund&&G.savings<o.e.fund?'No hay suficiente en tu hucha':'',os=e.o.map(fx),all=os.every(why);return os.map((o,j)=>{const w=why(o),no=w&&!all;return `<button class="opt" ${no?'disabled':''} onclick="pick(${j})"><b>${['🔵','🟡','🟣'][j]} ${o.l}</b><span>${no?w:(w?'⚠️ Sin otra salida: '+w.toLowerCase()+' y habrá mora':o.s)}</span></button>`}).join('')})()}</div></div>`;
+ const o=G.pickO||e.o[P],bad=o.e.stress>=10||o.e.pen||o.e.card||o.e.loan||o.e.bad||o.e.score<0;
+ return `${mascot(bad?(o.e.bad?'¡Era una estafa! Si suena demasiado bueno para ser verdad, desconfía.':o.e.loan?'¡Ojo! Mira el total: las cuotas salieron más caras de lo que parecían.':'Uy, esa decisión tiene consecuencias. ¡Aprende de ella!'):'¡Muy buena decisión!',bad?'bad':'good')}<div class="card text-center"><div style="font-size:3.5rem">${e.i}</div><h3 class="font-bold">Elegiste: ${o.l}</h3><div class="mt-2">${chips(o.e)}${G.pickDS?`<span class="chip">😰 Por la nueva deuda: +${G.pickDS}% estrés</span>`:''}</div>
+ <button class="btn mt-5" onclick="nextEv()">${G.evi>=G.ev.length-1?'Ir a la tarjeta 💳':'Siguiente sorpresa'}</button></div>`;},
+p3(){const b=G.card,min=Math.ceil(b*.1),use=b/G.limit*100;
+ const card=`<div class="fcard"><div class="flex justify-between"><b>💳 Tarjeta Fin-Lab</b><span>Cupo total ${fmt(G.limit)}</span></div><div class="text-3xl font-extrabold mt-3 num">${fmt(b)}</div><div class="sm">Saldo que debes · Cupo disponible: ${fmt(Math.max(0,G.limit-b))}</div><div class="bar mt-2" style="background:rgba(255,255,255,.3)"><i style="width:${Math.min(100,use)}%;background:#fff"></i></div><div class="sm mt-1">Pago total ${fmt(b)} · Pago mínimo ${fmt(min)}</div><div class="sm mt-1">🔒 El cupo no se renueva solo: se libera únicamente con lo que pagas.</div>${G.loans.length?`<div class="sm mt-2">📅 Aparte debes ${fmt(loanDebt())} en cuotas. Se pagan con tus gastos fijos, no aquí.</div>`:''}</div>`;
+ if(b<1)return `${mascot('¡No debes nada en la tarjeta! Eso es genial.','good')}<div class="card">${card}<div class="text-center mt-4"><button class="btn" onclick="payCard('none')">Continuar</button></div></div>`;
+ const pv=minPreview(b);
+ return `${mascot('Es hora de pagar la tarjeta. ¡Elige con cuidado!')}<div class="card">${card}
+ ${stmt()}<button class="opt" ${G.cash+G.savings<b?'disabled':''} onclick="payCard('full')"><b>🟢 Pagar todo (${fmt(b)})</b><span>${G.cash+G.savings<b?'No te alcanza el dinero':G.cash<b?'Tu cartera no alcanza: pagas con tu hucha. Cero intereses y +15 puntos':'Cero intereses y +15 puntos de crédito'}</span></button>
+ <button class="opt" ${G.cash+G.savings<min?'disabled':''} onclick="payCard('min')"><b>🟡 Pagar el mínimo (${fmt(min)})</b><span>${G.cash+G.savings<min?'No te alcanza el dinero':G.cash<min?'Tu cartera no alcanza: pagas con tu hucha. Lo que queda crece 5% al mes':'Lo que queda crece 5% cada mes y sube el estrés 10%'}</span></button>
+ <button class="opt" onclick="payCard('skip')"><b>🔴 No pagar</b><span>Mora: -40 puntos, +15% estrés y multa de $15</span></button>
+ <div class="mt-4 p-3 rounded-2xl" style="background:color-mix(in srgb,var(--rd) 12%,var(--sf))">🔮 <b>Si solo pagaras el mínimo siempre,</b> terminarías pagando <b style="color:var(--rd)">${fmt(pv.total)}</b> por una deuda de ${fmt(b)} (¡${fmt(pv.total-b)} de intereses y cerca de ${(pv.months/12).toFixed(1)} años!).</div></div>`;},
+p3r(){const r=G.res;return `${mascot(r.msg,r.mood)}<div class="card text-center"><div style="font-size:3.5rem">${r.ic}</div><div>${r.chips.map(x=>`<span class="chip">${x}</span>`).join('')}</div>${G.extra?`<div class="alert mt-3">${G.extra}</div>`:''}<button class="btn mt-5" onclick="go('p4');${G.stars===3||G.newB.length?'confetti()':''}">Ver mi resumen del mes</button></div>`;},
+p4(){const s=G.snap,n=Math.max(0,net()),d=(a,b,u='',inv)=>{const x=Math.round(b-a);return `<b style="color:${x===0?'var(--mu)':(inv?x<0:x>0)?'var(--gr)':'var(--rd)'}">${x>0?'+':''}${x}${u}</b>`};
+ const goals=GOALS.map(([i,t,v])=>{const p=Math.min(100,n/v*100);return `<div class="mt-2"><div class="flex justify-between sm"><span>${i} ${t}</span><span class="num">${fmt(Math.min(n,v))} / ${fmt(v)}${p>=100?' ✔':''}</span></div><div class="bar"><i style="width:${p}%;background:${p>=100?'var(--gr)':'var(--bl)'}"></i></div></div>`}).join('');
+ const bd=BADGES.map(([k,i,t,x])=>`<div class="card badge ${G.badges[k]?'on':''} !p-3 text-center"><div class="text-3xl">${i}</div><b class="sm">${t}</b><div class="mu sm">${x}</div></div>`).join('');
+ return `${mascot(G.stars===3?'¡¡3 estrellas!! ¡Eres un genio del dinero!':G.stars===2?'¡Buen mes! Sigue mejorando.':'Este mes fue difícil, ¡pero aprendes con cada decisión!',G.stars>1?'good':'bad')}
+ ${G.newB.length?`<div class="card text-center mb-3" style="border-color:var(--yl)">🎉 <b>¡Nueva insignia: ${G.newB.map(k=>BADGES.find(b=>b[0]===k)[2]).join(', ')}!</b></div>`:''}
+ <div class="card text-center"><div style="font-size:3rem">${'⭐'.repeat(G.stars)}${'☆'.repeat(3-G.stars)}</div><div class="grid grid-cols-3 gap-2 mt-2"><div><div class="mu sm">Puntos</div><b>${G.score}</b> ${d(s.score,G.score)}</div><div><div class="mu sm">Cartera</div><b>${fmt(G.cash)}</b> ${d(s.cash,G.cash)}</div><div><div class="mu sm">Estrés</div><b>${Math.round(G.stress)}%</b> ${d(s.stress,G.stress,'%',1)}</div></div></div>
+ <div class="card mt-3"><h3 class="font-extrabold">🎯 Tus metas</h3>${goals}</div><h3 class="font-extrabold mt-3 mb-2">🏅 Tus insignias</h3><div class="grid grid-cols-3 gap-2">${bd}</div>
+ <div class="text-center mt-4"><button class="btn !text-xl" onclick="nextMonth()">${G.month===12?'¡Ver mi informe final!':'Siguiente mes ➡️'}</button></div>`;},
+over(){const n=net();return `${mascot('Tu estrés llegó al 100%. Las deudas y los gastos te agotaron. ¡Pero se aprende intentando!','bad')}<div class="card text-center"><div style="font-size:4.5rem">😵</div><h2 class="text-3xl font-extrabold">¡Game over!</h2><p class="mu">${G.name}, llegaste hasta el mes ${G.month} de 12.</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3"><div><div class="mu sm">Patrimonio</div><b>${fmt(n)}</b></div><div><div class="mu sm">Puntos</div><b>${G.score}</b></div><div><div class="mu sm">Deudas</div><b>${fmt(debt())}</b></div><div><div class="mu sm">Estrellas</div><b>${G.hist.reduce((a,b)=>a+b,0)}</b></div></div>
+<p class="mt-3">💡 ${debt()>300?'Las deudas suben el estrés cada mes: paga la tarjeta completa y evita compras a cuotas.':'Cuida tu diversión y tu ahorro, y no te quedes sin dinero en la cartera.'}</p><button class="btn bl mt-5" onclick="init()">Intentar de nuevo 🔁</button></div>`;},
+final(){const n=net(),sc=G.score;
+ const g=sc>=750&&n>=3000?['Maestro financiero','🏆']:sc>=670&&n>=1000?['Ahorrador estrella','🌟']:sc>=580?['Aprendiz en progreso','🌱']:['Practicante de riesgo','🛟'];
+ const tot=G.hist.reduce((a,b)=>a+b,0);
+ return `${mascot(`¡Lo lograste, ${G.name}! Terminaste el año con ${tot} estrellas.`,'good')}<div class="card text-center"><div style="font-size:4.5rem">${g[1]}</div><h2 class="text-3xl font-extrabold">${G.av} ${G.name}: ${g[0]}</h2>
+ <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3"><div><div class="mu sm">Patrimonio</div><b>${fmt(n)}</b></div><div><div class="mu sm">Puntos</div><b style="color:${scoreCol(sc)}">${sc}</b></div><div><div class="mu sm">Estrés</div><b>${Math.round(G.stress)}%</b></div><div><div class="mu sm">Deudas</div><b>${fmt(debt())}</b></div></div>
+ <div class="mt-3 text-left">${GOALS.map(([i,t,v])=>`<div>${i} ${t}: ${n>=v?'<b style="color:var(--gr)">¡lograda!</b>':'<span class="mu">'+Math.round(Math.max(0,n)/v*100)+'%</span>'}</div>`).join('')}${BADGES.map(([k,i,t])=>`<div>${i} ${t}: ${G.badges[k]?'<b style="color:var(--gr)">¡ganada!</b>':'<span class="mu">pendiente</span>'}</div>`).join('')}</div>
+ <button class="btn bl mt-5" onclick="init()">Jugar otra vez 🔁</button></div>`;}
+};
+
+function getPaid(){G.cash+=G.income;sfx(900);go('p1');}
+function adj(k,d){G.bud[k]+=d;sfx(d>0?700:450,.08);render();}
+function confirmBudget(){
+  const b=G.bud;G.cash-=b.fixed+b.save+b.life;G.savings+=b.save;
+  G.loans.forEach(l=>l.n--);G.loans=G.loans.filter(l=>l.n>0);
+  if(b.life>=150)G.stress-=6;else if(b.life===0)G.stress+=6;
+  if(b.save>=100)G.stress-=3;
+  settle();sfx(900);go('p2');
+}
+function pick(j){
+  const x=fx(G.ev[G.evi].o[j]);G.pickO=x;const e=x.e;G.cash+=e.cash||0;
+  if(e.fund){const t=Math.min(G.savings,e.fund);G.savings-=t;G.cash-=e.fund-t;}
+  if(e.card)G.cardItems.push({n:G.ev[G.evi].i+' '+G.ev[G.evi].t,a:e.card});G.savings+=e.sav||0;G.card+=e.card||0;G.assets+=e.asset||0;G.stress+=e.stress||0;G.score+=e.score||0;G.nextPen+=e.pen||0;const dS=(e.card||e.loan)?Math.min(10,Math.ceil((e.card||0)/40+(e.loan?e.loan.amt/60:0))):0;G.pickDS=dS;G.stress+=dS;
+  if(e.loan)G.loans.push({pay:e.loan.amt/e.loan.n,n:e.loan.n});
+  G.pick=j;settle();sfx(e.stress>=10||e.pen?250:800,.2);render(true);
+}
+function nextEv(){if(G.evi>=G.ev.length-1)go('p3');else{G.evi++;G.pick=null;render(true);}}
+function stmt(){const it=G.cardItems,s=it.reduce((a,x)=>a+x.a,0),adj=Math.round(G.card-G.cardPrev-s),rows=[];if(G.cardPrev>0)rows.push(['📅 Saldo del mes anterior (con intereses)',G.cardPrev]);it.forEach(x=>rows.push([x.n,x.a]));if(Math.abs(adj)>=1)rows.push(['Otros ajustes',adj]);return `<div class="card mt-3 !p-3"><b>🧾 Extracto de tu tarjeta</b>${rows.map(r=>`<div class="flex justify-between sm mt-1"><span>${r[0]}</span><b>${fmt(r[1])}</b></div>`).join('')}<div class="flex justify-between mt-2"><b>Total a pagar</b><b>${fmt(G.card)}</b></div></div>`;}
+function minPreview(b){let t=0,m=0;while(b>=1&&m<600){const p=b*.1;t+=p;b=(b-p)*1.05;m++;}return{total:t+b,months:m};}
+function payCard(t){
+  const b=G.card;let r;
+  if(t==='none'){G.score+=3;r={mood:'good',ic:'😎',msg:'Sin deudas, ¡así se hace!',chips:['⭐ +3 puntos']};}
+  if(t==='full'){spend(b);G.card=0;G.score+=15;G.streak++;r={mood:'good',ic:'🎉',msg:'¡Pagaste todo! Cero intereses y tu reputación sube.',chips:[`💵 -${fmt(b)}`,'⭐ +15 puntos']};sfx(1000,.25);}
+  if(t==='min'){const p=Math.ceil(b*.1);spend(p);G.card=Math.round((b-p)*1.05);G.stress+=10;G.streak=0;r={mood:'bad',ic:'🐌',msg:'Solo pagaste el mínimo: la deuda sigue creciendo con intereses.',chips:[`💵 -${fmt(p)}`,'😰 +10% estrés',`💳 Saldo de la tarjeta: ${fmt(G.card)}`]};}
+  if(t==='skip'){G.card=Math.round(b*1.05+15);G.score-=40;G.stress+=15;G.streak=0;r={mood:'bad',ic:'🚨',msg:'No pagar es mora: pierdes puntos y la deuda crece.',chips:['⭐ -40 puntos','😰 +15% estrés',`💳 Saldo de la tarjeta: ${fmt(G.card)}`]};sfx(180,.3);}
+  G.cardPrev=G.card;G.cardItems=[];G.res=r;endMonth();
+}
+function endMonth(){
+  const ds=Math.min(15,Math.round(debt()/120));G.stress=Math.max(0,G.stress-5+ds);G.extra='';if(ds>0)G.res.chips.push(`😰 Por tus deudas (tarjeta + cuotas: ${fmt(debt())}): +${ds}% estrés`);
+  if(G.stress>85){G.score-=15;G.cash-=40;G.extra='Estás muy estresado: perdiste 15 puntos y $40 en gastos de salud.';}
+  settle();const old={...G.badges};
+  if(G.streak>=3)G.badges.zero=1;if(G.savings>=3*G.bud.fixed)G.badges.shield=1;if(G.score>750)G.badges.inv=1;
+  G.newB=Object.keys(G.badges).filter(k=>!old[k]);
+  const s=G.snap;G.stars=(G.score>=s.score?1:0)+(G.stress<50?1:0)+(G.cash>0?1:0);G.hist.push(G.stars);
+  go('p3r');
+}
+function nextMonth(){if(G.month===12){go('final');confetti();return;}G.month++;startMonth();go('map');}
+init();
+</script>
+</body>
+</html>
